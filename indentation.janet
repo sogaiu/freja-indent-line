@@ -258,6 +258,7 @@
 
 (varfn newline-and-indent!
   [gb]
+  (gb/delete-selection! gb)
   (delete-whitespace-backward! gb)
   # after this, should be on next line
   (gb/insert-string-at-caret! gb "\n")
