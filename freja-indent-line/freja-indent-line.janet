@@ -2,7 +2,7 @@
 (import freja/state)
 (import freja/default-hotkeys :as dh)
 
-(import ./indent)
+(import ../indent-line/indent)
 
 # XXX: for investigation
 (defn current-gb
@@ -265,11 +265,11 @@
   (indent-current-line! gb)
   gb)
 
-# XXX: any better way?
+# XXX: any better way?  also use set-key?
 '(put dh/gb-binds
      :enter
      (comp dh/reset-blink newline-and-indent!))
 
-(put-in dh/gb-binds
-        [:shift :enter]
-        (comp dh/reset-blink newline-and-indent!))
+(dh/set-key dh/gb-binds
+            [:shift :enter]
+            (comp dh/reset-blink newline-and-indent!))
