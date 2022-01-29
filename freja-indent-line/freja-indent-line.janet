@@ -224,9 +224,9 @@
   # for composing with other functions
   gb)
 
-(put dh/gb-binds
-     :tab
-     (comp dh/reset-blink indent-current-line!))
+(dh/set-key dh/gb-binds
+            :tab
+            (comp dh/reset-blink indent-current-line!))
 
 (varfn delete-whitespace-backward!
   ``
