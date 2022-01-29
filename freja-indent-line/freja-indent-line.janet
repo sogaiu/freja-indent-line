@@ -2,7 +2,7 @@
 (import freja/state)
 (import freja/default-hotkeys :as dh)
 
-(import ../indent-line/indent)
+(import ./indent-line/indent-line)
 
 # XXX: for investigation
 (defn current-gb
@@ -187,7 +187,7 @@
     (def region
       (string/slice (gb/content gb) start end))
     (def new-indent
-        (indent/calc-last-line-indent region))
+        (indent-line/calc-last-line-indent region))
     (if (neg? new-indent)
       nil
       new-indent)))

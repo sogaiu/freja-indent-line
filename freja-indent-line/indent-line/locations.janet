@@ -191,197 +191,162 @@
 (comment
 
   (peg/match loc-grammar "# i am a comment")
-  # => '@[(:comment " i am a comment" 1 1)]
+  # =>
+  '@[(:comment " i am a comment" 1 1)]
 
   (peg/match loc-grammar "true")
-  # => '@[(:constant "true" 1 1)]
+  # =>
+  '@[(:constant "true" 1 1)]
 
   (peg/match loc-grammar `"hello"`)
-  # => '@[(:string "hello" 1 1)]
+  # =>
+  '@[(:string "hello" 1 1)]
 
   (peg/match loc-grammar `@"breathe"`)
-  # => '@[(:buffer "breathe" 1 1)]
+  # =>
+  '@[(:buffer "breathe" 1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "1")
-    #
-    '@[(:number "1" 1 1)])
-  # => true
+  (peg/match loc-grammar "1")
+  # =>
+  '@[(:number "1" 1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "(+ 1 1)")
-    #
-    '@[(:tuple (:symbol "+" 1 2) (:whitespace " " 1 3)
-               (:number "1" 1 4) (:whitespace " " 1 5)
-               (:number "1" 1 6)
-               1 1)])
-  # => true
+  (peg/match loc-grammar "(+ 1 1)")
+  # =>
+  '@[(:tuple (:symbol "+" 1 2) (:whitespace " " 1 3)
+             (:number "1" 1 4) (:whitespace " " 1 5)
+             (:number "1" 1 6)
+             1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "|(+ $ 1)")
-    #
-    '@[(:fn
-         (:tuple (:symbol "+" 1 3) (:whitespace " " 1 4)
-                 (:symbol "$" 1 5) (:whitespace " " 1 6)
-                 (:number "1" 1 7) 1 2)
-         1 1)])
-  # => true
+  (peg/match loc-grammar "|(+ $ 1)")
+  # =>
+  '@[(:fn
+       (:tuple (:symbol "+" 1 3) (:whitespace " " 1 4)
+               (:symbol "$" 1 5) (:whitespace " " 1 6)
+               (:number "1" 1 7) 1 2)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "| [:hi $]")
-    #
-    '@[(:fn
-         (:whitespace " " 1 2)
-         (:bracket-tuple (:keyword ":hi" 1 4) (:whitespace " " 1 7)
-                         (:symbol "$" 1 8)
-                         1 3)
-         1 1)])
-  # => true
+  (peg/match loc-grammar "| [:hi $]")
+  # =>
+  '@[(:fn
+       (:whitespace " " 1 2)
+       (:bracket-tuple (:keyword ":hi" 1 4) (:whitespace " " 1 7)
+                       (:symbol "$" 1 8)
+                       1 3)
+       1 1)]
 
   (peg/match loc-grammar "'print")
-  # => '@[(:quote (:symbol "print" 1 2) 1 1)]
+  # =>
+  '@[(:quote (:symbol "print" 1 2) 1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "' defer")
-    #
-    '@[(:quote
-         (:whitespace " " 1 2)
-         (:symbol "defer" 1 3)
-         1 1)])
-  # => true
+  (peg/match loc-grammar "' defer")
+  # =>
+  '@[(:quote
+       (:whitespace " " 1 2)
+       (:symbol "defer" 1 3)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "~fun")
-    #
-    '@[(:quasiquote
-         (:symbol "fun" 1 2)
-         1 1)])
-  # => true
+  (peg/match loc-grammar "~fun")
+  # =>
+  '@[(:quasiquote
+       (:symbol "fun" 1 2)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar ";[1 2]")
-    #
-    '@[(:splice
-         (:bracket-tuple
-           (:number "1" 1 3) (:whitespace " " 1 4)
-           (:number "2" 1 5)
-           1 2)
-         1 1)])
-  # => true
+  (peg/match loc-grammar ";[1 2]")
+  # =>
+  '@[(:splice
+       (:bracket-tuple
+         (:number "1" 1 3) (:whitespace " " 1 4)
+         (:number "2" 1 5)
+         1 2)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "~(,fun)")
-    #
-    '@[(:quasiquote
-         (:tuple
-           (:unquote
-             (:symbol "fun" 1 4)
-             1 3)
-           1 2)
-         1 1)])
-  # => true
+  (peg/match loc-grammar "~(,fun)")
+  # =>
+  '@[(:quasiquote
+       (:tuple
+         (:unquote
+           (:symbol "fun" 1 4)
+           1 3)
+         1 2)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "{:a 1 :b 2}")
-    #
-    '@[(:struct
-         (:keyword ":a" 1 2) (:whitespace " " 1 4)
-         (:number "1" 1 5) (:whitespace " " 1 6)
-         (:keyword ":b" 1 7) (:whitespace " " 1 9)
-         (:number "2" 1 10)
-         1 1)])
-  # => true
+  (peg/match loc-grammar "{:a 1 :b 2}")
+  # =>
+  '@[(:struct
+       (:keyword ":a" 1 2) (:whitespace " " 1 4)
+       (:number "1" 1 5) (:whitespace " " 1 6)
+       (:keyword ":b" 1 7) (:whitespace " " 1 9)
+       (:number "2" 1 10)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "{:a 1\n:b 2}")
-    #
-    '@[(:struct
-         (:keyword ":a" 1 2) (:whitespace " " 1 4)
-         (:number "1" 1 5) (:whitespace "\n" 1 6)
-         (:keyword ":b" 2 1) (:whitespace " " 2 3)
-         (:number "2" 2 4)
-         1 1)])
-  # => true
+  (peg/match loc-grammar "{:a 1\n:b 2}")
+  # =>
+  '@[(:struct
+       (:keyword ":a" 1 2) (:whitespace " " 1 4)
+       (:number "1" 1 5) (:whitespace "\n" 1 6)
+       (:keyword ":b" 2 1) (:whitespace " " 2 3)
+       (:number "2" 2 4)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar "[1 2 3]")
-    #
-    '@[(:bracket-tuple
-         (:number "1" 1 2) (:whitespace " " 1 3)
-         (:number "2" 1 4) (:whitespace " " 1 5)
-         (:number "3" 1 6)
-         1 1)])
-  # => true
+  (peg/match loc-grammar "[1 2 3]")
+  # =>
+  '@[(:bracket-tuple
+       (:number "1" 1 2) (:whitespace " " 1 3)
+       (:number "2" 1 4) (:whitespace " " 1 5)
+       (:number "3" 1 6)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar
-               (string "@(1\n"
-                       "[:x :y]\n"
-                       "(+ 0 9))"))
-    #
-    '@[(:array
-         (:number "1" 1 3) (:whitespace "\n" 1 4)
-         (:bracket-tuple (:keyword ":x" 2 2) (:whitespace " " 2 4)
-                         (:keyword ":y" 2 5)
-                         2 1)
-         (:whitespace "\n" 2 8)
-         (:tuple (:symbol "+" 3 2) (:whitespace " " 3 3)
-                 (:number "0" 3 4) (:whitespace " " 3 5)
-                 (:number "9" 3 6)
-                 3 1)
-         1 1)])
-  # => true
+  (peg/match loc-grammar
+             (string "@(1\n"
+                     "[:x :y]\n"
+                     "(+ 0 9))"))
+  # =>
+  '@[(:array
+       (:number "1" 1 3) (:whitespace "\n" 1 4)
+       (:bracket-tuple (:keyword ":x" 2 2) (:whitespace " " 2 4)
+                       (:keyword ":y" 2 5)
+                       2 1)
+       (:whitespace "\n" 2 8)
+       (:tuple (:symbol "+" 3 2) (:whitespace " " 3 3)
+               (:number "0" 3 4) (:whitespace " " 3 5)
+               (:number "9" 3 6)
+               3 1)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar
-               (string "@{:a 1\n"
-                       ":b 2\n"
-                       ":c 3}"))
-    #
-    '@[(:table
-         (:keyword ":a" 1 3) (:whitespace " " 1 5)
-         (:number "1" 1 6) (:whitespace "\n" 1 7)
-         (:keyword ":b" 2 1) (:whitespace " " 2 3)
-         (:number "2" 2 4) (:whitespace "\n" 2 5)
-         (:keyword ":c" 3 1) (:whitespace " " 3 3)
-         (:number "3" 3 4)
-         1 1)])
-  # => true
+  (peg/match loc-grammar
+             (string "@{:a 1\n"
+                     ":b 2\n"
+                     ":c 3}"))
+  # =>
+  '@[(:table
+       (:keyword ":a" 1 3) (:whitespace " " 1 5)
+       (:number "1" 1 6) (:whitespace "\n" 1 7)
+       (:keyword ":b" 2 1) (:whitespace " " 2 3)
+       (:number "2" 2 4) (:whitespace "\n" 2 5)
+       (:keyword ":c" 3 1) (:whitespace " " 3 3)
+       (:number "3" 3 4)
+       1 1)]
 
-  (deep=
-    #
-    (peg/match loc-grammar
-               (string "@[:fun\n"
-                       "  :smile\n"
-                       "  :breathe]"))
-    #
-    '@[(:bracket-array
-         (:keyword ":fun" 1 3) (:whitespace "\n" 1 7)
-         (:whitespace "  " 2 1)
-         (:keyword ":smile" 2 3) (:whitespace "\n" 2 9)
-         (:whitespace "  " 3 1)
-         (:keyword ":breathe" 3 3)
-         1 1)])
-  # => true
+  (peg/match loc-grammar
+             (string "@[:fun\n"
+                     "  :smile\n"
+                     "  :breathe]"))
+  # =>
+  '@[(:bracket-array
+       (:keyword ":fun" 1 3) (:whitespace "\n" 1 7)
+       (:whitespace "  " 2 1)
+       (:keyword ":smile" 2 3) (:whitespace "\n" 2 9)
+       (:whitespace "  " 3 1)
+       (:keyword ":breathe" 3 3)
+       1 1)]
 
   (peg/match loc-grammar "``a long string``")
-  # => '@[(:long-string "``a long string``" 1 1)]
+  # =>
+  '@[(:long-string "``a long string``" 1 1)]
 
   (peg/match loc-grammar "@``a long buffer``")
-  # => '@[(:long-buffer "``a long buffer``" 1 1)]
+  # =>
+  '@[(:long-buffer "``a long buffer``" 1 1)]
 
   )
 
@@ -393,16 +358,13 @@
 
 (comment
 
-  (deep=
-    #
-    (ast "(/ 2 1)")
-    #
-    '(:tuple
-       (:symbol "/" 1 2) (:whitespace " " 1 3)
-       (:number "2" 1 4) (:whitespace " " 1 5)
-       (:number "1" 1 6)
-       1 1))
-  # => true
+  (ast "(/ 2 1)")
+  # =>
+  '(:tuple
+     (:symbol "/" 1 2) (:whitespace " " 1 3)
+     (:number "2" 1 4) (:whitespace " " 1 5)
+     (:number "1" 1 6)
+     1 1)
 
   )
 
@@ -413,16 +375,20 @@
 (comment
 
   (node-type (ast "(+ 1 1)"))
-  # => :tuple
+  # =>
+  :tuple
 
   (node-type (ast " "))
-  # => :whitespace
+  # =>
+  :whitespace
 
   (node-type (ast "# hello"))
-  # => :comment
+  # =>
+  :comment
 
   (node-type (ast "1"))
-  # => :number
+  # =>
+  :number
 
   )
 
@@ -433,7 +399,8 @@
 (comment
 
   (start-pos '(:symbol "/" 1 2))
-  # => [1 2]
+  # =>
+  [1 2]
 
   )
 
@@ -444,23 +411,21 @@
 (comment
 
   (content '(:symbol "/" 1 2))
-  # => '("/")
+  # =>
+  '("/")
 
-  (deep=
-    #
-    (content
-      '(:tuple
-         (:symbol "/" 1 2) (:whitespace " " 1 3)
-         (:number "2" 1 4) (:whitespace " " 1 5)
-         (:number "1" 1 6)
-         1 1))
-    #
-    '[(:symbol "/" 1 2)
-      (:whitespace " " 1 3)
-      (:number "2" 1 4)
-      (:whitespace " " 1 5)
-      (:number "1" 1 6)])
-  # => true
+  (content
+    '(:tuple
+       (:symbol "/" 1 2) (:whitespace " " 1 3)
+       (:number "2" 1 4) (:whitespace " " 1 5)
+       (:number "1" 1 6)
+       1 1))
+  # =>
+  '[(:symbol "/" 1 2)
+    (:whitespace " " 1 3)
+    (:number "2" 1 4)
+    (:whitespace " " 1 5)
+    (:number "1" 1 6)]
 
   )
 
@@ -492,51 +457,44 @@
 
   (find-context (ast "1")
                 [1 1])
-  # => :top-level
+  # =>
+  :top-level
 
   (find-context (ast ":hello")
                 [1 7])
-  # => nil
+  # =>
+  nil
 
-  (deep=
-    #
-    (find-context (ast "(+ 2 1)")
-                  [1 6])
-    #
-    '(:tuple
-       (:symbol "+" 1 2) (:whitespace " " 1 3)
-       (:number "2" 1 4) (:whitespace " " 1 5)
-       (:number "1" 1 6)
-       1 1))
-  # => true
+  (find-context (ast "(+ 2 1)")
+                [1 6])
+  # =>
+  '(:tuple
+     (:symbol "+" 1 2) (:whitespace " " 1 3)
+     (:number "2" 1 4) (:whitespace " " 1 5)
+     (:number "1" 1 6)
+     1 1)
 
-  (deep=
-    #
-    (find-context (ast (string "(defn my-fn\n"
-                               "  [x]\n"
-                               "  (+ x 1))"))
-                  [3 6])
-    #
-    '(:tuple
-       (:symbol "+" 3 4) (:whitespace " " 3 5)
-       (:symbol "x" 3 6) (:whitespace " " 3 7)
-       (:number "1" 3 8)
-       3 3))
-  # => true
+  (find-context (ast (string "(defn my-fn\n"
+                             "  [x]\n"
+                             "  (+ x 1))"))
+                [3 6])
+  # =>
+  '(:tuple
+     (:symbol "+" 3 4) (:whitespace " " 3 5)
+     (:symbol "x" 3 6) (:whitespace " " 3 7)
+     (:number "1" 3 8)
+     3 3)
 
-  (deep=
-    #
-    (find-context (ast (string "(defn my-fn\n"
-                               "  [x]\n"
-                               "  (+ x (- 2 3)))"))
-                  [3 11])
-    #
-    '(:tuple
-       (:symbol "-" 3 9) (:whitespace " " 3 10)
-       (:number "2" 3 11) (:whitespace " " 3 12)
-       (:number "3" 3 13)
-       3 8))
-  # => true
+  (find-context (ast (string "(defn my-fn\n"
+                             "  [x]\n"
+                             "  (+ x (- 2 3)))"))
+                [3 11])
+  # =>
+  '(:tuple
+     (:symbol "-" 3 9) (:whitespace " " 3 10)
+     (:number "2" 3 11) (:whitespace " " 3 12)
+     (:number "3" 3 13)
+     3 8)
 
   )
 
@@ -556,12 +514,14 @@
 (comment
 
   (head-sym (ast "(+ 1 1)"))
-  # => "+"
+  # =>
+  "+"
 
   (head-sym (ast (string "(\n"
                          " # hi there\n"
                          " + 1 1)")))
-  # => "+"
+  # =>
+  "+"
 
   )
 
@@ -577,10 +537,12 @@
 (comment
 
   (mutable-container? (ast "@[]"))
-  # => true
+  # =>
+  true
 
   (mutable-container? (ast "[]"))
-  # => false
+  # =>
+  false
 
   )
 
@@ -603,20 +565,23 @@
        (:whitespace " " 3 5)
        (:whitespace " " 3 7)
        3 8))
-  # => true
+  # =>
+  true
 
   (empty-tuple?
     '(:tuple
        (:comment " hi there" 3 5)
        (:whitespace " " 3 7)
        3 8))
-  # => true
+  # =>
+  true
 
   (empty-tuple?
     '(:tuple
        (:symbol "+" 3 4) (:whitespace " " 3 5)
        (:symbol "x" 3 6) (:whitespace " " 3 7)
        (:number "1" 3 8)))
-  # => false
+  # =>
+  false
 
   )

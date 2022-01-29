@@ -44,13 +44,16 @@
 (comment
 
   (special? "try")
-  # => true
+  # =>
+  true
 
   (special? "print")
-  # => false
+  # =>
+  false
 
   (special? "with-feeling")
-  # => true
+  # =>
+  true
 
   )
 
@@ -137,53 +140,63 @@
   (calc-indent (loc/ast (string "[:a\n"
                                 ":b]"))
                [2 1])
-  # => 1
+  # =>
+  1
 
   (calc-indent (loc/ast (string "@[\"1\"\n"
                                 "\"2\"]"))
                [2 1])
-  # => 2
+  # =>
+  2
 
   (calc-indent (loc/ast (string "{:a 1\n"
                                 ":b 2}"))
                [2 1])
-  # => 1
+  # =>
+  1
 
   (calc-indent (loc/ast (string "@{:x 9\n"
                                 ":y 0}"))
                [2 1])
-  # => 2
+  # =>
+  2
 
   (calc-indent (loc/ast (string "(\n)"))
                [2 1])
-  # => 1
+  # =>
+  1
 
   (calc-indent (loc/ast (string "(def a\n"
                                 "1)"))
                [2 1])
-  # => 2
+  # =>
+  2
 
   (calc-indent (loc/ast (string "(let [x 1]\n"
                                 "(+ x 1))"))
                [2 1])
-  # => 2
+  # =>
+  2
 
   (calc-indent (loc/ast (string "(print\n"
                                 "\"hello\")"))
                [2 1])
-  # => 2
+  # =>
+  2
 
   (calc-indent (loc/ast (string "(print \"alpha\"\n"
                                 "\"beta\")"))
                [2 1])
-  # => 7
+  # =>
+  7
 
   (calc-indent (loc/ast (string "(put @{:a 1}\n"
                                 "     :b 2\n"
                                 "     # fun comment\n"
                                 ":c 3)"))
                [4 1])
-  # => 5
+  # =>
+  5
 
   )
 
@@ -201,19 +214,24 @@
 (comment
 
   (indentation-pos "    3")
-  # => 4
+  # =>
+  4
 
   (indentation-pos ":a")
-  # => 0
+  # =>
+  0
 
   (indentation-pos " ")
-  # => 0
+  # =>
+  0
 
   (indentation-pos "")
-  # => 0
+  # =>
+  0
 
   (indentation-pos " @``")
-  # => 1
+  # =>
+  1
 
   )
 
@@ -277,33 +295,38 @@
     (string "`\n"
             " hello")
     "`" [1 1] :string)
-  # => 0
+  # =>
+  0
 
   (calc-mid-string-indent
     (string "``\n"
             "  hello")
     "`" [1 1] :string)
-  # => 0
+  # =>
+  0
 
   (calc-mid-string-indent
     (string "(def a\n"
             "  ``\n"
             "hi")
     "`" [2 3] :string)
-  # => 2
+  # =>
+  2
 
   (calc-mid-string-indent
     (string " @``\n"
             "hi")
     "`" [1 3] :buffer)
-  # => 2
+  # =>
+  2
 
   (calc-mid-string-indent
     (string "(def b\n"
             `  "Beginning\n`
             "next")
     `"` [2 3] :string)
-  # => 2
+  # =>
+  2
 
   )
 
@@ -333,10 +356,9 @@
   # balanced delimiters. thus the last line (already discarded) is
   # not at the top-level
   (def first-char (first delims))
-  # handle mid-tring case separately
+  # handle mid-string case separately
   (when (or (= (chr "`") first-char)
             (= (chr `"`) first-char))
-    # XXX: pass in other info from missing-delims
     (break (calc-mid-string-indent preceding-region
                                    delims delim-start-pos delim-type)))
   # replace the last line (already discarded) because:
@@ -389,92 +411,111 @@
     # non-spork/fmt formatting
     (string " (defn a\n"
             "   1"))
-  # => -1
+  # =>
+  -1
 
   (calc-last-line-indent "(+ 2 8)")
-  # => 0
+  # =>
+  0
 
   (calc-last-line-indent ":a")
-  # => 0
+  # =>
+  0
 
   (calc-last-line-indent
     (string "(+ 2\n"
             "8)"))
-  # => 3
+  # =>
+  3
 
   (calc-last-line-indent
     (string "(defn my-fn\n"
             "  [x]\n"
             "(+ x"))
-  # => 2
+  # =>
+  2
 
   (calc-last-line-indent
     (string "{:a 1\n"
             ":b"))
-  # => 1
+  # =>
+  1
 
   (calc-last-line-indent
     (string "`\n"
             " hello"))
-  # => 0
+  # =>
+  0
 
   (calc-last-line-indent
     (string "``\n"
             "  hello"))
-  # => 0
+  # =>
+  0
 
   (calc-last-line-indent
     (string "(def a\n"
             "  ``\n"
             "hi"))
-  # => 2
+  # =>
+  2
 
   (calc-last-line-indent
     (string " @``\n"
             "hi"))
-  # => 2
+  # =>
+  2
 
   (calc-last-line-indent
     (string "(def b\n"
             `  "Beginning\n`
             "next"))
-  # => 2
+  # =>
+  2
 
   (calc-last-line-indent
     (string "{:a\n"
             `""`))
-  # => 1
+  # =>
+  1
 
   (calc-last-line-indent
     (string "{:a\n"
             "[]"))
-  # => 1
+  # =>
+  1
 
   (calc-last-line-indent
     (string "(def a\n"
             "(print 1))"))
-  # => 2
+  # =>
+  2
 
   (calc-last-line-indent "(def a")
-  # => 0
+  # =>
+  0
 
   (calc-last-line-indent "(def a\n1")
-  # => 2
+  # =>
+  2
 
   # XXX: whitespace before newline needs to be cleaned by editor?
   (calc-last-line-indent "(def a \n1")
-  # => 2
+  # =>
+  2
 
   (calc-last-line-indent (string "(try\n"
                                  "  1\n"
                                  "  #\n"
                                  "  ([err]\n"
                                  "2))"))
-  # => 4
+  # =>
+  4
 
   (calc-last-line-indent (string "(defn my-fun\n"
                                  "[x]"))
-  # => 2
+  # =>
+  2
 
   )
 
@@ -483,5 +524,5 @@
   [& args]
   (def indent
     (calc-last-line-indent (file/read stdin :all)))
-  (eprint "indent: " indent)
+  (eprintf "indent: %p" indent)
   (print indent))
