@@ -224,10 +224,6 @@
   # for composing with other functions
   gb)
 
-(dh/set-key dh/gb-binds
-            :tab
-            (comp dh/reset-blink indent-current-line!))
-
 (varfn delete-whitespace-backward!
   ``
   From caret, delete any contiguous whitespace backward until non-whitespace
@@ -265,11 +261,3 @@
   (indent-current-line! gb)
   gb)
 
-# XXX: any better way?  also use set-key?
-'(put dh/gb-binds
-     :enter
-     (comp dh/reset-blink newline-and-indent!))
-
-(dh/set-key dh/gb-binds
-            [:shift :enter]
-            (comp dh/reset-blink newline-and-indent!))
