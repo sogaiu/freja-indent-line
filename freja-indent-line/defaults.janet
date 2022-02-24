@@ -3,7 +3,7 @@
 (import ./freja-indent-line :as fil)
 
 (dh/set-key dh/gb-binds
-            :tab
+            [:tab]
             (comp dh/reset-blink fil/indent-current-line!))
 
 # XXX: any better way?  also use set-key?
